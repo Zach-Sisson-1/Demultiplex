@@ -14,13 +14,13 @@
 2. Per-base NT distribution
     1. Use markdown to insert your 4 histograms here.
         
-        ![](Read_1.png)
+        ![](Plots/Read_1.png)
 
-        ![](Read_2.png)
+        ![](Plots/Read_2.png)
 
-        ![](Index_1.png)
+        ![](Plots/Index_1.png)
 
-        ![](Index_2.png)
+        ![](Plots/Index_2.png)
 
     2. ```Looking at the mean distributions, the majority of base calls within the indexes are at or above a Qscore of 30, indicating an confidene call of 99.9%. Given this distribution, A good quality score cutoff for index reads should be Q30, that is to say any base call within an index sequence that is below Q30 should be counted as unknown. The Qscore cutoff for biological read pairs can be slightly lower, at Q20 (99% confidence). Since there are very few base-pairs (8) in the indexes, it takes fewer errors to have a large impact (i.e match the entire sequence to the incorrect group) and so the Qscore cutoff should be more stringent to ensure the data that is grouped together, belongs together, even if that means the data is slightly more sparse. On the otherhand, A Qscore of 20 indicates a 1 in 100 (99%) chance that the base call is accurate. Since downstream sequence analysis involves larger reads than the indexes, the cutoff can be relaxed because the impact of any one base being incorrect drops with a longer sequence since there are more bases on either side to validate a sequence match than in the index reads.```
     3. ```Total indexes with (N) base calls = 7,304,664 ```
