@@ -120,40 +120,40 @@ Loop through each input file, storing first four lines (stripped of '\n') in mem
         R2line4 >> 'Unknown_L008_R2_001.fastq'
 
 
-If this number == 0:
+    If this number == 0:
 
-- calculate/store reverse compliment of Index1 (I1line2) (see FXNS)
-- using a regex expression, search for the match of the reverse compliment of Index1 in Index2 (I2line2), matching only if each character is identical to the pattern. 
+    - calculate/store reverse compliment of Index1 (I1line2) (see FXNS)
+    - using a regex expression, search for the match of the reverse compliment of Index1 in Index2 (I2line2), matching only if each character is identical to the pattern. 
 
-    If match = True AND Index1 is in dictionary.keys:
-        Indexes match and should be assigned to proper group
-        assign that R1/R2 record by writing to appropriate file via:
+        If match = True AND Index1 is in dictionary.keys:
+            Indexes match and should be assigned to proper group
+            assign that R1/R2 record by writing to appropriate file via:
 
-        string(R1line1 + I1line2-I2line2) >> 'dictionary[index1 match]_L008_R1_001.fastq'  *note that this writes the original header + the index pair to new file
-        R1line2 >> 'dictionary[index1 match]_L008_R1_001.fastq'
-        R1line3 >> 'dictionary[index1 match]_L008_R1_001.fastq'
-        R1line4 >> 'dictionary[index1 match]_L008_R1_001.fastq'
-        and
-        string(R2line1 + I1line2-I2line2) >> 'dictionary[index1 match]_L008_R2_001.fastq'  *note that this writes the original header + the index pair to new file
-        R2line2 >> dictionary[index1 match]_L008_R2_001.fastq'
-        R2line3 >> dictionary[index1 match]_L008_R2_001.fastq'
-        R2line4 >> dictionary[index1 match]_L008_R2_001.fastq'
+            string(R1line1 + I1line2-I2line2) >> 'dictionary[index1 match]_L008_R1_001.fastq'  *note that this writes the original header + the index pair to new file
+            R1line2 >> 'dictionary[index1 match]_L008_R1_001.fastq'
+            R1line3 >> 'dictionary[index1 match]_L008_R1_001.fastq'
+            R1line4 >> 'dictionary[index1 match]_L008_R1_001.fastq'
+            and
+            string(R2line1 + I1line2-I2line2) >> 'dictionary[index1 match]_L008_R2_001.fastq'  *note that this writes the original header + the index pair to new file
+            R2line2 >> dictionary[index1 match]_L008_R2_001.fastq'
+            R2line3 >> dictionary[index1 match]_L008_R2_001.fastq'
+            R2line4 >> dictionary[index1 match]_L008_R2_001.fastq'
+            
+        If match = False AND Index1 is in dictionary.keys() AND reverse compliment of Index2 is in dictionary.keys()
+            Indexes must be swapped, assign R1/R2 record to swapped file via:
+
+            string(R1line1 + I1line2-I2line2) >> 'Swapped_L008_R1_001.fastq'  *note that this writes the original header + the index pair to new file
+            R1line2 >> 'Swapped_L008_R1_001.fastq'
+            R1line3 >> 'Swapped_L008_R1_001.fastq'
+            R1line4 >> 'Swapped_L008_R1_001.fastq'
+            and
+            string(R1line1 + I1line2-I2line2) >> 'Swapped_L008_R2_001.fastq'  *note that this writes the original header + the index pair to new file
+            R2line2 >> 'Swapped_L008_R2_001.fastq'
+            R2line3 >> 'Swapped_L008_R2_001.fastq'
+            R2line4 >> 'Swapped_L008_R2_001.fastq'
         
-    If match = False AND Index1 is in dictionary.keys() AND reverse compliment of Index2 is in dictionary.keys()
-        Indexes must be swapped, assign R1/R2 record to swapped file via:
-
-        string(R1line1 + I1line2-I2line2) >> 'Swapped_L008_R1_001.fastq'  *note that this writes the original header + the index pair to new file
-        R1line2 >> 'Swapped_L008_R1_001.fastq'
-        R1line3 >> 'Swapped_L008_R1_001.fastq'
-        R1line4 >> 'Swapped_L008_R1_001.fastq'
-        and
-        string(R1line1 + I1line2-I2line2) >> 'Swapped_L008_R2_001.fastq'  *note that this writes the original header + the index pair to new file
-        R2line2 >> 'Swapped_L008_R2_001.fastq'
-        R2line3 >> 'Swapped_L008_R2_001.fastq'
-        R2line4 >> 'Swapped_L008_R2_001.fastq'
-    
-    Else: Assign records to unknown file using code from above
-        
+        Else: Assign records to unknown file using code from above
+            
 
 4) Refresh 16 line record memory, reset counters for Qscore, increment line-grabbing counter and grab new record for each file
 5) Iterate until end of file
