@@ -6,6 +6,8 @@ import Bioinfo as bf
 import numpy as np
 import matplotlib.pyplot as plt
 
+#This script inputs a FASTQ file with a specified read-length and outputs a mean distribution plot of the Qscores at each base position. 
+
 def get_args():
 	parser = argparse.ArgumentParser(description="A script to generate a distribution plot of mean Qscore per nucleotide")
 	parser.add_argument("-f", "--file_name", help = "Path to file to run script on", type=str, required=True )
@@ -53,6 +55,7 @@ base_pos = []
 for i in range(args.read_length):
 	base_pos.append(i)
 
+#Plots figure and saves figure
 plt.bar(base_pos,mean)
 plt.title(args.output)
 plt.xlabel('Nucleotide Position')
