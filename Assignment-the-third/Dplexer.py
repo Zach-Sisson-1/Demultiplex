@@ -234,7 +234,7 @@ total_matched_hopped = hopped_counter+matched_counter
 sorted(index_pair_dict, key=lambda i: int(index_pair_dict[i]))
 
 #Generate report of file contents
-statsfile = str(path+'stats.md')
+statsfile = str(path+'stats.txt')
 with open(statsfile,"w") as fto:
 	fto.write(str('Statistic' + '\t' + 'Value' + '\t' + 'Percentage of Whole'+'\n'))
 	fto.write('\n')
@@ -260,7 +260,7 @@ with open(statsfile,"w") as fto:
 		fto.write('\t')
 		fto.write(str(round(value/total_counter*100,2)))
 		fto.write('%')
-		fto.write('\n')
+		fto.write(str('\n'))
 
 
 
