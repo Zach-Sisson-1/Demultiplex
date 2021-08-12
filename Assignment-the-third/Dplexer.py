@@ -106,6 +106,8 @@ total_counter = 0
 #Create a list of all possible index-matches that will be used as a counter
 index_pair_list = []
 Index_list = list(index_dictionary.keys())
+Index_list.remove('Unknown')
+Index_list.remove('Swapped')
 for num in range(len(Index_list)):
 	for i in range(len(Index_list)):
 		index_pair_list.append(str(Index_list[i])+'-'+str(Index_list[num]))
@@ -118,9 +120,8 @@ for i in index_pair_list:
 
 #Open all files and keep them open in proper path
 for key,value in index_dictionary.items():
-	value[0] = open(str(path+index_dictionary[key][0]),"at")
-	value[1] = open(str(path+index_dictionary[key][1]),"at")
-
+	value[0] = open(str(path+index_dictionary[key][0]),"wt")
+	value[1] = open(str(path+index_dictionary[key][1]),"wt")
 
 #Open four input FASTQ files, and grab record from each file
 Read1 = gzip.open(args.read1_file_name, "rt")
@@ -153,6 +154,7 @@ while R1line1:
 	#append the index1 and index2 sequence to the header lines for the reads sequences
 	R1_header = str(R1line1.strip('\n') + ' ' + I1line2.strip('\n')+ '-' + I2line2)
 	R2_header = str(R2line1.strip('\n') + ' ' + I1line2.strip('\n')+ '-' + I2line2)
+	
 	#Determine avg quality score of index lines. If either of the indexes in the pair contain an unknown base call (N) or an avg Q-score below the cutoff then bin to unknown. 
 	if Qscore_eval(I1line4,30) == False or Qscore_eval(I2line4,30) == False:
 		Read1opener('Unknown',R1_header,R1line2,R1line3,R1line4)
@@ -160,43 +162,47 @@ while R1line1:
 		unknown_counter += 1
 		total_counter += 1
 		
-	
-	#Check to see if Index 2 is a perfect reverse complement of index 1 and if the index is in the reference list, If so, bin the reads to the proper file.
-	rev_comp = reverse_complement(I2line2)
-	elif I1line2.strip('\n') == rev_comp and I1line2.strip('\n') in index_dictionary.keys():
-		Read1opener(I1line2.strip('\n'),R1_header,R1line2,R1line3,R1line4)
-		Read2opener(I1line2.strip('\n'),R2_header,R2line2,R2line3,R2line4)
-		matched_counter += 1
-		total_counter += 1
-		#Increments specific index-pair counter
-		key_to_search = str(I1line2.strip('\n'))+'-'+str(rev_comp)
-		index_pair_dict[key_to_search] += 1
-
-
-	#If the indexes are perfect complements but are not found in the reference list, bin to unknown.
-	elif I1line2.strip('\n') == rev_comp and I1line2.strip('\n') not in index_dictionary.keys():
-		Read1opener('Unknown',R1_header,R1line2,R1line3,R1line4)
-		Read2opener('Unknown',R2_header,R2line2,R2line3,R2line4)
-		unknown_counter += 1
-		total_counter += 1
-	
-	
-	#If the indexes are NOT perfect reverse complements, BUT they are both found in the reference list, assign to index-hopped file.
-	elif  I1line2.strip('\n') != rev_comp and I1line2.strip('\n') in index_dictionary.keys() and rev_comp in index_dictionary.keys():
-		Read1opener('Swapped',R1_header,R1line2,R1line3,R1line4)
-		Read2opener('Swapped',R2_header,R2line2,R2line3,R2line4)
-		hopped_counter += 1
-		total_counter += 1
-		#Increments specific index-pair counter
-		key_to_search = str(I1line2.strip('\n'))+'-'+str(rev_comp)
-		index_pair_dict[key_to_search] += 1
-	
-	#If none of the above then bin to unknown.
 	else:
-		Read1opener('Unknown',R1_header,R1line2,R1line3,R1line4)
-		Read2opener('Unknown',R2_header,R2line2,R2line3,R2line4)
-		unknown_counter += 1
-		total_counter += 1
+		#Check to see if Index 2 is a perfect reverse complement of index 1 and if the index is in the reference list, If so, bin the reads to the proper file.
+		rev_comp = reverse_complement(I2line2)
+		if I1line2.strip('\n') == rev_comp and I1line2.strip('\n') in index_dictionary.keys():
+			Read1opener(I1line2.strip('\n'),R1_header,R1line2,R1line3,R1line4)
+			Read2opener(I1line2.strip('\n'),R2_header,R2line2,R2line3,R2line4)
+			matched_counter += 1
+			total_counter += 1
+			#Increments specific index-pair counter
+			key_to_search = str(I1line2.strip('\n'))+'-'+str(rev_comp)
+			index_pair_dict[key_to_search] += 1
+
+		else:
+
+			#If the indexes are perfect complements but are not found in the reference list, bin to unknown.
+			if I1line2.strip('\n') == rev_comp and I1line2.strip('\n') not in index_dictionary.keys():
+				Read1opener('Unknown',R1_header,R1line2,R1line3,R1line4)
+				Read2opener('Unknown',R2_header,R2line2,R2line3,R2line4)
+				unknown_counter += 1
+				total_counter += 1
+			
+			
+			else:
+
+				#If the indexes are NOT perfect reverse complements, BUT they are both found in the reference list, assign to index-hopped file.
+				if  I1line2.strip('\n') != rev_comp and I1line2.strip('\n') in index_dictionary.keys() and rev_comp in index_dictionary.keys():
+					Read1opener('Swapped',R1_header,R1line2,R1line3,R1line4)
+					Read2opener('Swapped',R2_header,R2line2,R2line3,R2line4)
+					hopped_counter += 1
+					total_counter += 1
+					#Increments specific index-pair counter
+					key_to_search = str(I1line2.strip('\n'))+'-'+str(rev_comp)
+					index_pair_dict[key_to_search] += 1
+				
+				
+				#If none of the above then bin to unknown.
+				else:
+					Read1opener('Unknown',R1_header,R1line2,R1line3,R1line4)
+					Read2opener('Unknown',R2_header,R2line2,R2line3,R2line4)
+					unknown_counter += 1
+					total_counter += 1
 
 #Grab next record for each file and continue
 	R1line1 = Read1.readline()
@@ -219,7 +225,6 @@ while R1line1:
 	R2line3 = Read2.readline()
 	R2line4 = Read2.readline()
 
-
 #Close all files
 for key,value in index_dictionary.items():
 	Readcloser(key)
@@ -230,7 +235,7 @@ total_matched_hopped = hopped_counter+matched_counter
 sorted(index_pair_dict, key=lambda i: int(index_pair_dict[i]))
 
 #Generate report of file contents
-with open('/home/zsisson2/bgmp/bioinformatics/Bi622/Demultiplex/Assignment-the-third/stats.md',"w") as fto:
+with open(str(path+'stats.md',"w") as fto:
 	fto.write(str('Statistic' + '\t' + 'Value' + '\t' + 'Percentage of Whole'+'\n'))
 	fto.write(str('Total_Number_of_Read-Pairs' + '\t' + str(total_counter) + '\t' + str(round(total_counter/total_counter*100,2)) +'%'+'\n'))
 	fto.write(str('Dual-Matched_Read-Pairs' + '\t' + str(matched_counter) + '\t' + str(round(matched_counter/total_counter*100,2)) +'%'+'\n'))
