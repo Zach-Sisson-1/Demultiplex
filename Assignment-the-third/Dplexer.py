@@ -235,7 +235,8 @@ total_matched_hopped = hopped_counter+matched_counter
 sorted(index_pair_dict, key=lambda i: int(index_pair_dict[i]))
 
 #Generate report of file contents
-with open(str(path+'stats.md',"w") as fto:
+statsfile = str(path+'stats.md')
+with open(statsfile,"w") as fto:
 	fto.write(str('Statistic' + '\t' + 'Value' + '\t' + 'Percentage of Whole'+'\n'))
 	fto.write(str('Total_Number_of_Read-Pairs' + '\t' + str(total_counter) + '\t' + str(round(total_counter/total_counter*100,2)) +'%'+'\n'))
 	fto.write(str('Dual-Matched_Read-Pairs' + '\t' + str(matched_counter) + '\t' + str(round(matched_counter/total_counter*100,2)) +'%'+'\n'))
