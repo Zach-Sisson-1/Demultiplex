@@ -4,7 +4,6 @@ import argparse
 import Bioinfo
 import gzip 
 import re
-import os
 
 '''The utility of this script is to demultiplex Illumina paired-end reads given a set of dual-matched indexes and the four output files (Read 1 Insert 1, Insert 2, Read 2) produced by the sequencing run. The script will output Read1 and Read2 files for each sample group matched via the dual index as well as a R1/R2 file for both unknown/low quality and index hopped reads. The script will also output a stats.txt file containing information on the number of reads in each file.'''
 
