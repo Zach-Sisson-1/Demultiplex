@@ -155,7 +155,7 @@ while R1line1:
 	R2_header = str(R2line1.strip('\n') + ' ' + I1line2.strip('\n')+ '-' + I2line2)
 	
 	#Determine avg quality score of index lines. If either of the indexes in the pair contain an unknown base call (N) or an avg Q-score below the cutoff then bin to unknown. 
-	if Qscore_eval(I1line4,30) == False or Qscore_eval(I2line4,30) == False:
+	if Qscore_eval(I1line4,args.cutoff) == False or Qscore_eval(I2line4,args.cutoff) == False:
 		Read1opener('Unknown',R1_header,R1line2,R1line3,R1line4)
 		Read2opener('Unknown',R2_header,R2line2,R2line3,R2line4)
 		unknown_counter += 1
